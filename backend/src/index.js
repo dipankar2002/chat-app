@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import cookeiParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import userRoute from './routes/user.router.js';
@@ -11,6 +12,10 @@ const app = express();
 
 app.use(express.json());
 app.use(cookeiParser());
+app.use(cors({
+    origin: "http://localhost:5173", // Replace with your frontend URL
+    credentials: true, // Allow cookies and authorization headers
+  }));
 
 app.use('/api/v1/auth', userRoute);
 app.use('/api/v1/message', messageRoute);
