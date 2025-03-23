@@ -67,7 +67,9 @@ export const signup = async (req,res)=> {
       });
     }
     
-    const isUserExist = await UserDb.findOne({ email });
+    const isUserExist = await UserDb.findOne({
+      $or: [{ email }, { username }]
+    });
     if(isUserExist) {
       return res.status(401).json({
         message: 'User already exists',
@@ -111,19 +113,12 @@ export const signup = async (req,res)=> {
   }
 }
 export const login = async (req,res) => {
-  const { email, password } = req.body;
+  const { loginId, password } = req.body;
 
   try {
-    const { success, error } = userLoginZod.safeParse({ email, password });
-    if(!success) {
-      return res.status(401).json({
-        message: 'Invalid input data',
-        success: false,
-        error: error,
-      });
-    }
-
-    const user = await UserDb.findOne({ email });
+    const user = await UserDb.findOne({
+      $or: [{ email: loginId }, { username: loginId }]
+    });
     if(!user) {
       return res.status(400).json({
         message: "User not found / Try to SignUp first",
