@@ -5,8 +5,7 @@ import imageCompression from 'browser-image-compression';
 
 
 const ProfilePage = () => {
-  const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
-  const [selectedImg, setSelectedImg] = useState(null);
+  const { authUser, selectedImg, isUpdatingProfile, updateProfile } = useAuthStore();
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -23,7 +22,6 @@ const ProfilePage = () => {
 
     try {
         const base64Image = await convertToBase64(file);
-        setSelectedImg(base64Image);
         await updateProfile({ profileImg: base64Image });
     } catch (error) {
         console.error("Error converting to Base64:", error);
@@ -69,6 +67,11 @@ const ProfilePage = () => {
                 />
               </label>
             </div>
+            {authUser.profileImg && 
+              <button 
+                className='bg-primary/10 text-primary font-bold px-2 py-1 rounded-md'
+                onClick={() => updateProfile({ profileImg: false })}
+              >Remove</button>}
             <p className="text-sm text-zinc-400">
               {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
             </p>

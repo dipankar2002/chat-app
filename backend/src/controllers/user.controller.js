@@ -11,9 +11,17 @@ export const updateProfile = async (req,res) => {
 
   try {
     if(!profileImg) {
-      return res.status(400).json({
-        message: "Profile image link not found",
-        success: false
+      const updateUser = await UserDb.findByIdAndUpdate(userId, { profileImg: "" }, { new: true });
+      return res.status(200).json({
+        message: "Profile image removed successfully",
+        success: true,
+        user: {
+          _id: updateUser._id,
+          email: updateUser.email,
+          name: updateUser.name,
+          username: updateUser.username,
+          profileImg: updateUser.profileImg,
+        }
       })
     }
 

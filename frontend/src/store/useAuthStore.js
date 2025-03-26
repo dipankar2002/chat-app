@@ -7,11 +7,13 @@ export const useAuthStore = create((set)=>({
   isSigningUp: false,
   isLoggingIng: false,
   idUpdatingProfile: false,
+  selectedImg: null,
 
   isCheckingAuth: true,
   
   updateProfile: async (data) => {
     set({ isUpdatingProfile: true });
+    set({ selectedImg: data.profileImg });
     try {
       const res = await axiosInstance.put("/auth/update-profile", data);
       if(res.data.success) {
