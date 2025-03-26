@@ -47,6 +47,7 @@ const LoginPage = () => {
                   <Mail className="h-5 w-5 text-base-content/40" />
                 </div>
                 <input
+                  required
                   type="text"
                   className={`input input-bordered w-full pl-10`}
                   placeholder="enter your email or username"
@@ -65,6 +66,7 @@ const LoginPage = () => {
                   <Lock className="h-5 w-5 text-base-content/40" />
                 </div>
                 <input
+                  required
                   type={showPassword ? "text" : "password"}
                   className={`input input-bordered w-full pl-10`}
                   placeholder="••••••••"

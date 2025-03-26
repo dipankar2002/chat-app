@@ -9,11 +9,31 @@ export const useAuthStore = create((set)=>({
   idUpdatingProfile: false,
 
   isCheckingAuth: true,
+  
+  updateProfile: async (data) => {
+    set({ isUpdatingProfile: true });
+    try {
+      const res = await axiosInstance.put("/auth/update-profile", data);
+      if(res.data.success) {
+        set({authUser: res.data.user});
+        toast.success(res.data.message);
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      console.log("error in update profile:", error);
+      toast.error(error.message + "\n Please try photo size >5mb.");
+    } finally {
+      set({ isUpdatingProfile: false });
+    }
+  },
 
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check");
-      set({authUser: res.data});
+      if(res.data.success) {
+        set({authUser: res.data.user});
+      }
     } catch(err) {
       set({authUser: null});
       console.log(err);
@@ -27,8 +47,8 @@ export const useAuthStore = create((set)=>({
     try {
       const res = await axiosInstance.post('/auth/signup', data);
       console.log(res);
-      set({ authUser: res.data.user });
       if(res.data.success) {
+        set({ authUser: res.data.user });
         toast.success(res.data.message);
       } else {
         toast.error(res.data.message);
@@ -45,8 +65,8 @@ export const useAuthStore = create((set)=>({
     set({isLoggingIng: true});
     try {
       const res = await axiosInstance.post('/auth/login', data);
-      set({ authUser: res.data.user });
       if(res.data.success) {
+        set({ authUser: res.data.user });
         toast.success(res.data.message);
       } else {
         toast.error(res.data.message);

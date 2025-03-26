@@ -3,8 +3,10 @@ import { config } from 'dotenv';
 
 config();
 
-export default cloudinary.config({
-  cloud_name: process.env.COULDINARY_CLOUD_NAME,
-  api_key: process.env.COULDINARY_API_KEY,
-  api_secret: process.env.COULDINARY_API_SECRET
-})
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+export default cloudinary;

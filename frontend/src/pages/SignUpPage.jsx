@@ -81,6 +81,7 @@ const SignUpPage = () => {
                   <User className="size-5 text-base-content/40 z-10" />
                 </div>
                 <input
+                  required
                   type="text"
                   className={`input input-bordered w-full pl-10`}
                   placeholder="John Doe"
@@ -99,6 +100,7 @@ const SignUpPage = () => {
                   <User className="size-5 text-base-content/40 z-10" />
                 </div>
                 <input
+                  required
                   type="text"
                   className={`input input-bordered w-full pl-10`}
                   placeholder="@johndoe01"
@@ -117,6 +119,7 @@ const SignUpPage = () => {
                   <Mail className="size-5 text-base-content/40 z-10" />
                 </div>
                 <input
+                  required
                   type="email"
                   className={`input input-bordered w-full pl-10`}
                   placeholder="you@example.com"
@@ -135,6 +138,7 @@ const SignUpPage = () => {
                   <Lock className="size-5 text-base-content/40 z-10" />
                 </div>
                 <input
+                  required
                   type={showPassword ? "text" : "password"}
                   className={`input input-bordered w-full pl-10`}
                   placeholder="••••••••"
