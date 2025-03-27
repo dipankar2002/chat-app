@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 app.use(cookeiParser());
 app.use(cors({
-    origin: "http://localhost:5173", // Replace with your frontend URL
+    origin: "http://localhost:4000", // Replace with your frontend URL
     credentials: true, // Allow cookies and authorization headers
   }));
 

@@ -9,6 +9,12 @@ export const useAuthStore = create((set)=>({
   idUpdatingProfile: false,
   selectedImg: null,
 
+  theme: localStorage.getItem("theme") || "light",
+  setTheme: (theme) => {
+    localStorage.setItem("theme", theme);
+    set({theme});
+  },
+
   isCheckingAuth: true,
   
   updateProfile: async (data) => {
