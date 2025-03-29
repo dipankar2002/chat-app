@@ -8,6 +8,7 @@ export const useAuthStore = create((set)=>({
   isLoggingIng: false,
   idUpdatingProfile: false,
   selectedImg: null,
+  onlineUsers: [],
 
   theme: localStorage.getItem("theme") || "light",
   setTheme: (theme) => {
