@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useChatStore } from '../store/useChatStore';
 import ChatHeader from './ChatHeader';
 import MessageInput from './MessageInput';
@@ -7,14 +7,23 @@ import { useAuthStore } from '../store/useAuthStore';
 import { formatMessageTime } from '../lib/utils';
 
 const ChatSection = () => {
-  const { selectedUser, messages, getMessages, isMessagesLoading } = useChatStore();
+  const { selectedUser, messages, getMessages, isMessagesLoading, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
   const { authUser } = useAuthStore();
   const [ activeImg, setActiveImg ] = useState(null);
+  const messageEndRef = useRef(null);
 
   useEffect(() => {
     getMessages(selectedUser._id);
-  }, [selectedUser, getMessages])
+    subscribeToMessages()
+
+    return () => unsubscribeFromMessages();
+  }, [selectedUser, getMessages, subscribeToMessages, unsubscribeFromMessages])
   
+  useEffect(() => {
+    if(messageEndRef.current && messages) {
+      messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages])
 
   if(isMessagesLoading) {
     return (
@@ -38,7 +47,7 @@ const ChatSection = () => {
           <div
             key={message._id}
             className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
-            
+            ref={messageEndRef}
           >
             {!activeImg ? (
               <div className=" chat-image avatar">

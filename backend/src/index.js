@@ -5,13 +5,13 @@ import dotenv from 'dotenv';
 import userRoute from './routes/user.router.js';
 import messageRoute from './routes/message.router.js';
 import { connectDB } from './lib/db.js';
+import { app, serverInstance } from './lib/socket.js';
 
 dotenv.config();
 const port = process.env.PORT;
-const app = express();
 
 app.use(express.json({ limit: '5mb' }));  // Adjust the limit as needed
-app.use(express.urlencoded({ extended: true, limit: '5mb' }));
+// app.use(express.urlencoded({ extended: true, limit: '5mb' }));
 
 app.use(cookeiParser());
 app.use(cors({
@@ -22,7 +22,7 @@ app.use(cors({
 app.use('/api/v1/auth', userRoute);
 app.use('/api/v1/message', messageRoute);
 
-app.listen(port, ()=>{
+serverInstance.listen(port, ()=>{
     console.log(`Server start`);
     connectDB();
 });
