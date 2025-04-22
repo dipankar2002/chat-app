@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useChatStore } from '../store/useChatStore';
 import SidebarSkeleton from './skeletons/SidebarSkeleton';
 import { Users } from 'lucide-react';
@@ -6,24 +6,42 @@ import { useAuthStore } from '../store/useAuthStore';
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
-  const { onlineUsers } = useAuthStore();
+  const { onlineUsers, theme } = useAuthStore();
+  const [ showOnlineOnly, setShowOnlineOnly ] = useState(false);
 
   useEffect(() => {
     getUsers();
   }, [getUsers])
 
+  const filteredUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users;
+
   if(isUsersLoading) return <SidebarSkeleton />
 
   return (
     <aside className='h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200'>
-      <div className='border-b border-base-300 w-full p-5'>
+      <div className='border-b border-base-300 w-full px-2 py-5 lg:px-5'>
         <div className='flex items-center gap-2'>
-          <Users className='size-6'/>
+          <Users className='size-6 mx-auto lg:mx-0'/>
           <span className='font-medium hidden lg:block'>Contacts</span>
+        </div>
+        <div className="mt-3 lg:flex lg:justify-start items-center gap-2 text-center lg:text-left">
+          <button 
+            onClick={()=>setShowOnlineOnly((val)=>!val)}
+            className={`
+                text-sm font-bold rounded-md px-2 py-1 
+                ${theme === "dark" ? 
+                  `${showOnlineOnly ? "opacity-100 text-green-300 bg-green-950" : "opacity-50 text-white bg-gray-800"}`
+                   : 
+                  `${showOnlineOnly ? "opacity-100 text-green-800 bg-green-200" : "opacity-50 text-white bg-gray-800"}`
+                }
+                transition-colors duration-200 cursor-pointer`}
+          >Online</button>
+          <br />
+          <span className="text-xs px-1 lg:px-0 text-zinc-500">({onlineUsers.length - 1} online)</span>
         </div>
       </div>
       <div className="overflow-y-auto w-full py-3">
-        {users.map((user) => (
+        {filteredUsers.map((user) => (
           <button
             key={user._id}
             onClick={() => setSelectedUser(user)}
@@ -57,7 +75,7 @@ const Sidebar = () => {
           </button>
         ))}
 
-        {users.length === 0 && (
+        {filteredUsers.length === 0 && (
           <div className="text-center text-zinc-500 py-4">No online users</div>
         )}
       </div>
