@@ -18,13 +18,13 @@ const Sidebar = () => {
   if(isUsersLoading) return <SidebarSkeleton />
 
   return (
-    <aside className='h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200'>
-      <div className='border-b border-base-300 w-full px-2 py-5 lg:px-5'>
+    <aside className='h-full w-full sm:w-20 md:w-72 border-r border-base-300 flex flex-col transition-all duration-200'>
+      <div className='border-b border-base-300 flex sm:block items-center w-full px-2 py-5 md:px-5'>
         <div className='flex items-center gap-2'>
-          <Users className='size-6 mx-auto lg:mx-0'/>
-          <span className='font-medium hidden lg:block'>Contacts</span>
+          <Users className='size-6 mx-0 sm:mx-auto md:mx-0'/>
+          <span className='font-medium block sm:hidden md:block'>Contacts</span>
         </div>
-        <div className="mt-3 lg:flex lg:justify-start items-center gap-2 text-center lg:text-left">
+        <div className="sm:mt-3 w-full mx-4 sm:mx-0 flex justify-between sm:block md:flex md:justify-start items-center gap-2 text-left sm:text-center md:text-left">
           <button 
             onClick={()=>setShowOnlineOnly((val)=>!val)}
             className={`
@@ -46,12 +46,13 @@ const Sidebar = () => {
             key={user._id}
             onClick={() => setSelectedUser(user)}
             className={`
-              w-full p-3 flex items-center gap-3
+              border-y border-[1px] border-base-content/10
+              w-full py-3 px-5 sm:p-3 flex items-center gap-3
               hover:bg-base-300 transition-colors
               ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}
             `}
           >
-            <div className="relative mx-auto lg:mx-0">
+            <div className="relative mx-0 sm:mx-auto md:mx-0">
               <img
                 src={user.profileImg || "/avatar.png"}
                 alt={user.name}
@@ -66,7 +67,7 @@ const Sidebar = () => {
             </div>
 
             {/* User info - only visible on larger screens */}
-            <div className="hidden lg:block text-left min-w-0">
+            <div className="sm:hidden md:block text-left min-w-0">
               <div className="font-medium truncate">{user.name}</div>
               <div className="text-sm text-zinc-400">
                 {onlineUsers.includes(user._id) ? "Online" : "Offline"}
