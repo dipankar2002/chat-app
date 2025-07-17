@@ -1,19 +1,40 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Send } from 'lucide-react';
 import { useAuthStore } from '../store/useAuthStore';
+import { formatMessageTime } from '../lib/utils';
+
+const now = new Date();
+const isoTime = now.toISOString();
 
 const PREVIEW_MESSAGES = [
-  { id: 1, content: "Hey! How's it going?", isSent: false },
-  { id: 2, content: "I'm doing great! Just working on some new features.", isSent: true },
-];
+    { id: 1, content: "Hey! How's it going?", isSent: false, createdAt: "2025-04-22T07:36:30.304+00:00" },
+    { id: 2, content: "I'm doing great! Just working on some new features.", isSent: true, createdAt: "2025-04-22T07:36:50.127+00:00" },
+  ];
 
-const THEMES = [
-  "light",
-  "dark",
-];
 
 const SettingPage = () => {
   const { theme, setTheme } = useAuthStore();
+  const [ text, setText ] = useState('');
+  const messageEndRef = useRef(null);
+
+  const [messages, setMessages] = useState(PREVIEW_MESSAGES);
+
+  useEffect(() => {
+    if(messageEndRef.current && messages) {
+      messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [messages])
+
+  function setMessText() {
+    const newMessage = {
+      id: Date.now(), // Unique ID
+      content: text,
+      isSent: true,
+      createdAt: new Date().toISOString(),
+    };
+    setMessages(prev => [...prev, newMessage]);
+    setText(''); // clear input
+  }
 
   return (
     <div className="h-screen container mx-auto px-4 pt-20 max-w-5xl">
@@ -45,7 +66,7 @@ const SettingPage = () => {
                 {/* Chat Header */}
                 <div className="px-4 py-3 border-b border-base-300 bg-base-100">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-primary-content font-medium">
+                    <div className="w-8 h-8 rounded-full bg-[#605DFF]/20 flex items-center justify-center text-base-content font-medium">
                       J
                     </div>
                     <div>
@@ -56,46 +77,44 @@ const SettingPage = () => {
                 </div>
 
                 {/* Chat Messages */}
-                <div className="p-4 space-y-4 min-h-[200px] max-h-[200px] overflow-y-auto bg-base-100">
-                  {PREVIEW_MESSAGES.map((message) => (
+                <div className="p-4 space-y-4 min-h-[200px] max-h-[200px] overflow-y-auto bg-base-100" style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}>
+                  {messages.map((message) => (
                     <div
                       key={message.id}
-                      className={`flex ${message.isSent ? "justify-end" : "justify-start"}`}
+                      className={`chat ${message.isSent ? "chat-end" : "chat-start"}`}
                     >
-                      <div
-                        className={`
-                          max-w-[80%] rounded-xl p-3 shadow-sm
-                          ${message.isSent ? "bg-primary text-primary-content" : "bg-base-200"}
-                        `}
-                      >
-                        <p className="text-sm">{message.content}</p>
-                        <p
-                          className={`
-                            text-[10px] mt-1.5
-                            ${message.isSent ? "text-primary-content/70" : "text-base-content/70"}
-                          `}
-                        >
-                          12:00 PM
-                        </p>
+                      <div className="chat-header mb-1">
+                        <time className="text-xs opacity-50 ml-1">
+                          {formatMessageTime(message.createdAt)}
+                        </time>
+                      </div>
+                      <div className={`chat-bubble p-0 ${message.isSent ? "bg-[#605DFF]/20" : ""} flex flex-col text-md`}>
+                        <p className='px-2 py-1'>{message.content}</p>
                       </div>
                     </div>
                   ))}
+                  <div ref={messageEndRef}></div>
                 </div>
 
                 {/* Chat Input */}
                 <div className="p-4 border-t border-base-300 bg-base-100">
-                  <div className="flex gap-2">
+                  <div className="flex items-center gap-2">
                     <input
                       type="text"
-                      className="input input-bordered flex-1 text-sm h-10"
+                      className="w-full input rounded-lg input-md"
                       placeholder="Type a message..."
-                      value="This is a preview"
-                      readOnly
-                      disabled
+                      value={text}
+                      onChange={(e) => setText(e.target.value)}
                     />
-                    <button className="btn btn-primary h-10 min-h-0">
-                      <Send size={18} />
-                    </button>
+                    {text && (
+                      <button
+                        className="btn btn-md btn-circle bg-[#605DFF]/20"
+                        onClick={() => setMessText()}
+                        disabled={!text.trim()}
+                      >
+                        <Send size={20} />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
