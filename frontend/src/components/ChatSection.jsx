@@ -5,6 +5,7 @@ import MessageInput from './MessageInput';
 import MessagesSkeleton from './skeletons/MessagesSkeleton';
 import { useAuthStore } from '../store/useAuthStore';
 import { formatMessageTime } from '../lib/utils';
+import { X } from 'lucide-react';
 
 const ChatSection = () => {
   const { selectedUser, messages, getMessages, isMessagesLoading, subscribeToMessages, unsubscribeFromMessages } = useChatStore();
@@ -13,17 +14,27 @@ const ChatSection = () => {
   const messageEndRef = useRef(null);
 
   useEffect(() => {
-    getMessages(selectedUser._id);
-    subscribeToMessages()
+    if (selectedUser?._id) {
+      getMessages(selectedUser._id);
+      subscribeToMessages();
+    }
 
     return () => unsubscribeFromMessages();
   }, [selectedUser, getMessages, subscribeToMessages, unsubscribeFromMessages])
   
   useEffect(() => {
     if(messageEndRef.current && messages) {
-      messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages])
+
+  useEffect(() => {
+    document.body.style.overflow = activeImg ? "hidden" : "auto";
+  }, [activeImg]);
+
+  const handleImageClick = (image) => {
+    setActiveImg(image);
+  };
 
   if(isMessagesLoading) {
     return (
@@ -34,10 +45,6 @@ const ChatSection = () => {
       </div>
     )
   }
-
-  const handleImageClick = (image) => {
-    setActiveImg(activeImg === image ? null : image);
-  };
 
   return (
     <div className='flex-1 flex flex-col overflow-auto'>
@@ -73,9 +80,7 @@ const ChatSection = () => {
                 <img
                   src={message.image}
                   alt="Attachment"
-                  className={`cursor-pointer transition-all duration-300 px-1 pt-1 ${
-                    activeImg === message.image ? "max-w-[600px] sm:max-w-[700px]" : "max-w-[150px] sm:max-w-[200px]"
-                  } rounded-md mb-2`}
+                  className="cursor-pointer transition-all duration-300 px-1 pt-1 max-w-[150px] sm:max-w-[200px] rounded-md mb-2"
                   onClick={() => handleImageClick(message.image)}
                 />
               )}
@@ -85,6 +90,26 @@ const ChatSection = () => {
         ))}
       </div>
       <MessageInput />
+
+      {/* Fullscreen Image Viewer */}
+      {activeImg && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center"
+          onClick={() => setActiveImg(null)}
+        >
+          <button
+            onClick={() => setActiveImg(null)}
+            className="absolute top-5 right-5 text-white text-3xl hover:text-gray-300 z-50"
+          >
+            <X />
+          </button>
+          <img
+            src={activeImg}
+            alt="Full View"
+            className="max-w-[95vw] max-h-[90vh] rounded-lg shadow-lg transition-all duration-300"
+          />
+        </div>
+      )}
     </div>
   )
 }
