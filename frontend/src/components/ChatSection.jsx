@@ -49,7 +49,7 @@ const ChatSection = () => {
             className={`chat ${message.senderId === authUser._id ? "chat-end" : "chat-start"}`}
             ref={messageEndRef}
           >
-            {!activeImg ? (
+            {/* {!activeImg ? (
               <div className=" chat-image avatar">
               <div className="size-10 rounded-full border">
                 <img
@@ -62,24 +62,24 @@ const ChatSection = () => {
                 />
               </div>
             </div>
-            ) : null}
+            ) : null} */}
             <div className="chat-header mb-1">
               <time className="text-xs opacity-50 ml-1">
                 {formatMessageTime(message.createdAt)}
               </time>
             </div>
-            <div className="chat-bubble flex flex-col text-md">
+            <div className={`chat-bubble p-0 ${message.senderId === authUser._id ? "bg-[#605DFF]/20" : ""} flex flex-col text-md`}>
               {message.image && (
                 <img
                   src={message.image}
                   alt="Attachment"
-                  className={`cursor-pointer transition-all duration-300 ${
-                    activeImg === message.image ? "max-w-[600px] sm:max-w-[700px]" : "max-w-[100px] sm:max-w-[200px]"
+                  className={`cursor-pointer transition-all duration-300 px-1 pt-1 ${
+                    activeImg === message.image ? "max-w-[600px] sm:max-w-[700px]" : "max-w-[150px] sm:max-w-[200px]"
                   } rounded-md mb-2`}
                   onClick={() => handleImageClick(message.image)}
                 />
               )}
-              {message.text && <p>{message.text}</p>}
+              {message.text && <p className='px-2 py-1'>{message.text}</p>}
             </div>
           </div>
         ))}
