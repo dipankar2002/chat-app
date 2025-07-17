@@ -97,13 +97,13 @@ const MessageInput = () => {
         { text || imagePreview ? (
           <button
             type="submit"
-            className="btn btn-sm btn-circle"
+            className="btn btn-sm btn-circle bg-[#605DFF]/20"
             disabled={!text.trim() && !imagePreview}
           >
             {
               isMessageSending ? 
                 <Loader className="size-10 animate-spin bg-transparent" /> : 
-                <Send size={22} />
+                <Send size={16} />
             }
           </button>
         ) : null}
